@@ -1,4 +1,3 @@
-from operator import getitem
 import torch
 import datasets
 from torch.utils.data import Dataset
@@ -7,8 +6,6 @@ import csv
 import pandas as pd
 import random
 class ExDataset(Dataset):
-    """传入一个csv文件,并处理数据
-        series_length,时间序列长度"""
     def __init__(self,data_path,series_length:int,date_label) -> None:
         super().__init__()
         self.data=[]
@@ -29,7 +26,6 @@ class ExDataset(Dataset):
     
 
 def split_set(data_set:ExDataset,proportion:list=[0.6,0.2,0.2]):
-    """依据比例将数据集分为训练集，测试集，验证集"""
     datase=random.shuffle(data_set.data)
     lengths=[int(len(dataset) * p) for p in proportion]
     trainset=dataset[0:lengths[0]]
