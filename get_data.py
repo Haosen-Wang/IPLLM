@@ -6,7 +6,7 @@ import csv
 import pandas as pd
 import random
 class ExDataset(Dataset):
-    def __init__(self,data_path,series_length:int,date_label) -> None:
+    def __init__(self,data_path,series_length:int,series_output_length:int,date_label) -> None:
         super().__init__()
         self.data=[]
         df = pd.read_csv(data_path)
@@ -16,7 +16,7 @@ class ExDataset(Dataset):
             if i+series_length>=len(np):
                 break
             data_x=torch.tensor(np[i:i+series_length])
-            data_y=torch.tensor(np[i+series_length])
+            data_y=torch.tensor(np[i+series_length:i+series_length+series_output_length])
             self.data.append((data_x,data_y))
     def __len__(self):
         return len(self.data)
@@ -36,7 +36,7 @@ def split_set(data_set:ExDataset,proportion:list=[0.6,0.2,0.2]):
     
 if __name__=="__main__":
     data_path='ETTh1.csv'
-    dataset=ExDataset(data_path,96,'date')
+    dataset=ExDataset(data_path,512,96,'date')
     trainset,testset,valset=split_set(dataset)
     print(len(trainset),len(testset),len(valset))
     trainloader = DataLoader(trainset,batch_size=64,shuffle=True)
